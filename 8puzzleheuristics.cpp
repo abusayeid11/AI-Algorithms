@@ -14,17 +14,30 @@ const vector<vector<int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};  // P
 // Function to calculate the Manhattan distance for a board
 int calculateManhattan(const vector<vector<int>>& board, const vector<vector<int>>& goalBoard) {
     int dist = 0;
+
+    // Create a map for target positions in the goalBoard
+    unordered_map<int, pair<int, int>> targetPositions;
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
-            if (board[i][j] != 0) {
-                int targetX = (board[i][j] - 1) / N;
-                int targetY = (board[i][j] - 1) % N;
+            targetPositions[goalBoard[i][j]] = {i, j};
+        }
+    }
+
+    // Calculate Manhattan distance for each tile in the board
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            int tile = board[i][j];
+            if (tile != 0) {  // Skip the empty tile
+                int targetX = targetPositions[tile].first;
+                int targetY = targetPositions[tile].second;
                 dist += abs(i - targetX) + abs(j - targetY);
             }
         }
     }
+
     return dist;
 }
+
 
 // Check if two boards are equal (goal reached)
 bool isGoal(const vector<vector<int>>& board, const vector<vector<int>>& goalBoard) {
